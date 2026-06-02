@@ -184,7 +184,6 @@
         </div>
 
         <div class="projects-grid">
-
             <!-- Card 2 -->
             <a href="#" class="project-card reveal" data-modal-image="images/mockups.png"
                 data-modal-title="UI/UX & Product Design" data-modal-badge="UI/UX" data-modal-year="2024"
@@ -291,27 +290,24 @@
 
 
             <!-- Featured -->
-            <a href="#" class="featured-card reveal" data-modal-image="images/lhbl.png"
-                data-modal-title="End-to-End Digital Publishing" data-modal-badge="⭐ Featured · Personal Project"
-                data-modal-year="2026" data-modal-tags="Digital Product Design"
-                data-modal-desc="Designed and launched an educational handwriting and tracing system utilizing a clean, structured aesthetic optimized for focused learning. Built the entire product framework from scratch, including custom UI layouts, typography guides, and standardized tracking sheets. To support the launch, engineered a self-hosted automation pipeline to streamline marketing asset generation and high-quality social media production.">
+            <a href="justina-case-study.html" class="featured-card reveal">
                 <div class="featured-thumb c1">
-                    <div class="featured-thumb-inner"><img src="images/lhbl.png"></div>
+                    <div class="featured-thumb-inner"><img src="images/justina-chart.png"></div>
                 </div>
                 <div class="featured-body">
                     <div>
-                        <div class="featured-label">⭐ Personal Project</div>
-                        <h3 class="featured-title">Featured Project: End-to-End Digital Publishing</h3>
-                        <p class="featured-desc">Taking digital products from concept to live deployment. Proven
-                            capability in structural layout design, typography systems, and asset pipeline execution for
-                            commercial digital products and educational materials.
-                        </p>
+                        <div class="featured-label">⭐ JustLogin Pte Ltd · 2024</div>
+                        <h3 class="featured-title">Justina AI Bot — Chart Visualization UI</h3>
+                        <p class="featured-desc">Designed and built a responsive AI chat interface that dynamically
+                            renders HR data charts inside a live B2B SaaS product. Demonstrates real-time chart type
+                            switching within a conversation thread.</p>
                     </div>
                     <div class="featured-meta">
-                        <span class="tag">Canva</span>
-                        <span class="tag">Pinterest</span>
-                        <span class="tag">ChatGPT</span>
-                        <span class="tag">Gemini</span>
+                        <span class="tag">HTML5 / CSS3</span>
+                        <span class="tag">Bootstrap</span>
+                        <span class="tag">Chart.js</span>
+                        <span class="tag">UI Design</span>
+                        <span class="tag">Data Visualization</span>
                     </div>
                 </div>
             </a>
@@ -337,7 +333,7 @@
                     eggie.valenzuela@gmail.com
                     <span class="contact-link-sub">Email</span>
                 </a>
-                <a href="https://www.linkedin.com/in/csvalenzuela" class="contact-link">
+                <a href="www.linkedin.com/in/csvalenzuela" class="contact-link">
                     <span class="contact-link-icon">🔗</span>
                     linkedin.com/in/csvalenzuela
                     <span class="contact-link-sub">LinkedIn</span>
@@ -466,7 +462,7 @@
         }
 
         // Attach click handlers to cards
-        const projectCards = document.querySelectorAll('.project-card, .featured-card');
+        const projectCards = document.querySelectorAll('.project-card');
         projectCards.forEach(card => {
             card.addEventListener('click', (e) => {
                 e.preventDefault();
