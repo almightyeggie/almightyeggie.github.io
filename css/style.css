@@ -538,6 +538,7 @@
             transition: box-shadow 0.3s, transform 0.3s;
             text-decoration: none;
             color: inherit;
+            margin-bottom: 20px;
         }
 
         .featured-card:hover {
