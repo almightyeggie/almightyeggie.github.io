@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Case Study — IRAS Tax Submission UI | Eggie Valenzuela</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #F5F2EC;
+      --bg2: #EDE9E0;
+      --surface: #FFFFFF;
+      --border: rgba(0, 0, 0, 0.09);
+      --text: #1A1714;
+      --muted: #7A746C;
+      --accent: #C8502A;
+      --tag-bg: rgba(200, 80, 42, 0.1);
+      --tag-color: #C8502A;
+      --nav-bg: rgba(245, 242, 236, 0.85);
+      --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.05);
+      --hero-line: rgba(26, 23, 20, 0.10);
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 clamp(1.5rem, 5vw, 4rem);
+      height: 64px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-logo {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-back {
+      font-size: 0.875rem;
+      color: var(--muted);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: color 0.2s;
+    }
+
+    .nav-back:hover {
+      color: var(--accent);
+    }
+
+    /* HERO */
+    .hero {
+      margin-top: 64px;
+      background: var(--bg);
+      padding: clamp(4rem, 8vw, 7rem) clamp(1.5rem, 5vw, 4rem) clamp(3rem, 6vw, 5rem);
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background-image:
+        linear-gradient(var(--hero-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--hero-line) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 60% at 50% 100%, black 30%, transparent 100%);
+    }
+
+    .hero-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      display: block;
+    }
+
+    .hero h1 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2.6rem, 6vw, 4.5rem);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      color: var(--text);
+      margin-bottom: 1.25rem;
+      max-width: 18ch;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      font-size: 1.1rem;
+      font-weight: 300;
+      color: var(--muted);
+      max-width: 65ch;
+      margin-bottom: 2.5rem;
+      line-height: 1.65;
+    }
+
+    .hero-meta {
+      justify-content: left;
+      display: flex;
+      gap: 2.5rem;
+      flex-wrap: wrap;
+    }
+
+    .meta-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .meta-value {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.9rem;
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* OVERVIEW STRIP */
+    .overview-strip {
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      padding: clamp(2rem, 4vw, 3rem) clamp(1.5rem, 5vw, 4rem);
+    }
+
+    .overview-grid {
+      margin: 0 auto;
+      max-width: 860px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+    }
+
+    .overview-item-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+
+    .overview-item-value {
+      font-size: 0.9rem;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    /* SECTIONS */
+    .section {
+      padding: clamp(3rem, 6vw, 5rem) clamp(1.5rem, 5vw, 4rem);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-alt {
+      background: var(--bg2);
+    }
+
+    .section-inner {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 500;
+      margin-bottom: 0.75rem;
+    }
+
+    .section h2 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 1.25rem;
+      max-width: 23ch;
+    }
+
+    .section p {
+      font-size: 1rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+      max-width: 65ch;
+      font-weight: 300;
+      line-height: 1.75;
+    }
+
+    .section p strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .section p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* CALLOUT */
+    .callout {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      padding: 1.25rem 1.5rem;
+      border-radius: 0 10px 10px 0;
+      margin: 1.5rem 0;
+      max-width: 65ch;
+    }
+
+    .callout p {
+      text-align: left;
+      font-size: 0.95rem;
+      color: var(--text);
+      font-weight: 400;
+      margin: 0;
+      font-style: italic;
+    }
+
+    /* STEPS */
+    .steps {
+      margin: 2rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .step {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .step:hover {
+      border-color: var(--accent);
+      transform: translateX(4px);
+    }
+
+    .step-num {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--tag-bg);
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .step-content h4 {
+      text-align: left;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .step-content p {
+      font-size: 0.875rem;
+      color: var(--muted);
+      margin: 0;
+      line-height: 1.6;
+      text-align: left;
+    }
+
+    /* FLOW STEPPER */
+    .flow-stepper {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      margin: 2rem 0;
+      max-width: 700px;
+    }
+
+    .flow-step {
+      flex: 1;
+      text-align: center;
+      position: relative;
+    }
+
+    .flow-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 16px;
+      left: 60%;
+      right: -40%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), rgba(200, 80, 42, 0.2));
+    }
+
+    .flow-dot {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 8px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      position: relative;
+      z-index: 1;
+    }
+
+    .flow-step-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      line-height: 1.3;
+    }
+
+    .flow-step-sub {
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-top: 3px;
+      line-height: 1.4;
+    }
+
+    /* SCREENSHOTS — 3-up grid */
+    .screens-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+      margin: 2rem 0;
+    }
+
+    /* .screen-item {} */
+
+    .screen-wrap {
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: var(--card-shadow);
+      margin-bottom: 0.75rem;
+    }
+
+    .screen-wrap img {
+      width: 100%;
+      display: block;
+    }
+
+    .screen-label {
+      text-align: left;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 2px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .screen-desc {
+      text-align: left;
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* TAGS */
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 1.5rem;
+      justify-content: center;
+    }
+
+    .tag {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.65rem;
+      border-radius: 100px;
+      background: var(--tag-bg);
+      color: var(--tag-color);
+    }
+
+    /* OUTCOMES */
+    .outcomes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .outcome-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .outcome-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .outcome-icon {
+      font-size: 1.4rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .outcome-card h4 {
+      text-align: left;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .outcome-card p {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin: 0;
+      line-height: 1.55;
+      text-align: left;
+    }
+
+    /* FOOTER CTA */
+    .footer-cta {
+      padding: clamp(3rem, 6vw, 5rem) clamp(1.5rem, 5vw, 4rem);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .footer-cta-text h3 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.35rem;
+    }
+
+    .footer-cta-text p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 300;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      background: var(--accent);
+      color: white;
+      padding: 0.75rem 1.75rem;
+      border-radius: 100px;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: opacity 0.2s, transform 0.2s;
+      white-space: nowrap;
+    }
+
+    .cta-btn:hover {
+      opacity: 0.88;
+      transform: translateY(-1px);
+    }
+
+    @media (max-width: 600px) {
+      .hero-meta {
+        justify-content: center;
+        gap: 1.5rem;
+      }
+
+      .flow-stepper {
+        margin-left: auto;
+        margin-right: auto;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .flow-step::after {
+        display: none;
+      }
+
+      .footer-cta {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .screens-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* LIGHTBOX */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      cursor: zoom-out;
+    }
+
+    .lightbox.active {
+      display: flex;
+    }
+
+    .lightbox img {
+      max-width: 92vw;
+      max-height: 88vh;
+      object-fit: contain;
+      border-radius: 12px;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+      cursor: default;
+      animation: lbFadeIn 0.25s ease;
+    }
+
+    .lightbox-close {
+      position: fixed;
+      top: 1.25rem;
+      right: 1.25rem;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: white;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .lightbox-close:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .screen-wrap img {
+      cursor: zoom-in;
+    }
+
+    @keyframes lbFadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.96);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="https://almightyeggie.github.io">AlmightyEggie</a>
+    <a class="nav-back" href="https://almightyeggie.github.io">← Back to Portfolio</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-inner">
+      <span class="hero-eyebrow">Case Study</span>
+      <h1>IRAS Tax Submission — <em>Legacy to Modern</em></h1>
+      <p class="hero-sub">Redesigning and rebuilding a critical 3-step government tax filing flow from a 90s-era legacy
+        system into JustLogin's modern SaaS platform — eliminating the need for users to switch between two separate
+        systems.</p>
+      <div class="hero-meta">
+        <div class="meta-item">
+          <div class="meta-label">Company</div>
+          <div class="meta-value">JustLogin Pte Ltd</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Role</div>
+          <div class="meta-value">UI Designer + Front-end Dev</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Stack</div>
+          <div class="meta-value">Bootstrap · HTML/CSS · JS</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Year</div>
+          <div class="meta-value">2022 — live & in use</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OVERVIEW STRIP -->
+  <div class="overview-strip">
+    <div class="overview-grid">
+      <div class="overview-item">
+        <div class="overview-item-label">Brief</div>
+        <div class="overview-item-value">Migrate the IRAS tax submission flow from JustLogin Classic into the modern
+          JustLogin Express UI</div>
+      </div>
+      <div class="overview-item">
+        <div class="overview-item-label">My Contribution</div>
+        <div class="overview-item-value">UI/UX design, mockup, full front-end development, integration within Express
+          design system</div>
+      </div>
+      <div class="overview-item">
+        <div class="overview-item-label">Impact</div>
+        <div class="overview-item-value">Eliminated dual-system login for HR teams filing employee tax — still live and
+          in production today</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: BACKGROUND -->
+  <div class="section">
+    <div class="section-inner">
+      <div class="section-label">Background</div>
+      <h2>A critical workflow stuck in the past</h2>
+      <p>IRAS (Inland Revenue Authority of Singapore) tax filing is a mandatory annual process for HR teams using
+        JustLogin. Every year, HR administrators need to generate, review, and submit income tax forms — IR8A, Appendix
+        8A, and A8B — on behalf of their employees directly to the Singapore government.</p>
+      <p>When JustLogin launched its modern <strong>Express</strong> platform, most features were migrated over — but
+        the IRAS submission module was left behind in <strong>JustLogin Classic</strong>, a legacy system built in the
+        90s with an outdated UI. This meant HR users had to maintain logins to both systems, context-switching
+        mid-workflow just to complete their tax filing.</p>
+      <div class="callout">
+        <p>"Users had to log in to the old Classic system just for IRAS. The whole point of Express was to have
+          everything in one place — this was a gap we needed to close."</p>
+      </div>
+      <p>The task was to design and build the full IRAS submission flow natively inside JustLogin Express — matching the
+        modern design system, and making the 3-step process intuitive enough that HR admins could complete it without
+        training.</p>
+    </div>
+  </div>
+
+  <!-- SECTION: THE FLOW -->
+  <div class="section section-alt">
+    <div class="section-inner">
+      <div class="section-label">The Flow</div>
+      <h2>A 3-step submission process</h2>
+      <p>The IRAS submission flow was structured as a clear, linear 3-step wizard — guiding HR admins from form
+        generation through to final submission status. Each step had a distinct purpose and its own validation logic.
+      </p>
+
+      <div class="flow-stepper">
+        <div class="flow-step">
+          <div class="flow-dot">1</div>
+          <div class="flow-step-label">Generate IRAS Forms</div>
+          <div class="flow-step-sub">Configure submission details & select employees</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-dot">2</div>
+          <div class="flow-step-label">Review & Submit</div>
+          <div class="flow-step-sub">Review history, validate, submit to IRAS</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-dot">3</div>
+          <div class="flow-step-label">Submission Status</div>
+          <div class="flow-step-sub">View results, warnings & error handling</div>
+        </div>
+      </div>
+
+      <p>Each step was connected by a persistent progress indicator at the top of the screen — a design decision that
+        kept users oriented throughout the multi-step flow and reduced drop-off and confusion.</p>
+    </div>
+  </div>
+
+  <!-- SECTION: PROCESS -->
+  <div class="section">
+    <div class="section-inner">
+      <div class="section-label">Process</div>
+      <h2>Mockup to HTML to production</h2>
+      <p>This project went through a full design-to-development lifecycle — from initial wireframe and mockup, through
+        to coded HTML templates that were handed off directly to the engineering team for backend integration.</p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Mapped the existing Classic flow</h4>
+            <p>Audited the legacy IRAS module in JustLogin Classic to understand the full scope — what fields were
+              required, what validations existed, and what the 3-step sequence needed to cover including edge cases like
+              warnings and failed submissions.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Designed within the Express system</h4>
+            <p>Created mockups that strictly followed JustLogin Express's established design system — Bootstrap grid,
+              typography, color palette, form components, and button styles. The goal was for IRAS to feel like it had
+              always been part of Express, not a transplant.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Designed the 3-column form layout</h4>
+            <p>Step 1 required a dense form with three distinct sections: IRAS Submission Details, Other Details, and
+              Authorized Person Details. Structured these into a clean 3-column layout with clear grouping so HR admins
+              could scan and fill efficiently without feeling overwhelmed.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>Built the IRAS History table (Step 2)</h4>
+            <p>Designed a filterable data table showing batch submissions by form type, tax year, status, and result
+              counts — with download and delete actions per row. Included filter controls for Year and Form Type to
+              handle large historical datasets.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <h4>Designed the error & warning states (Step 3)</h4>
+            <p>Step 3 required careful handling of submission outcomes — success, failure, and warnings. Designed a
+              clear status table with visual indicators, plus a dedicated warning section that surfaced specific
+              field-level issues with contextual descriptions and gave users two clear paths: resubmit or proceed.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">6</div>
+          <div class="step-content">
+            <h4>Built and handed off to dev</h4>
+            <p>Translated all mockups into full HTML/CSS templates using the JustLogin Bootstrap framework, then
+              collaborated with the engineering team during integration — troubleshooting any rendering or layout issues
+              in the live environment.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag">UI/UX Design</span>
+        <span class="tag">Wireframing</span>
+        <span class="tag">HTML5 / CSS3</span>
+        <span class="tag">Bootstrap</span>
+        <span class="tag">Form Design</span>
+        <span class="tag">Data Tables</span>
+        <span class="tag">Error States</span>
+        <span class="tag">Design Systems</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: SCREENS -->
+  <div class="section section-alt">
+    <div class="section-inner">
+      <div class="section-label">Output</div>
+      <h2>All 3 steps, shipped to production</h2>
+      <p>Each screen was designed and built to handle real user scenarios — including validation errors, multi-row data
+        tables, and complex form logic — all within JustLogin's Express design system.</p>
+
+      <div class="screens-grid">
+        <div class="screen-item">
+          <div class="screen-wrap">
+            <img src="images/iras1.png" alt="Step 1 — Generate IRAS Forms" />
+          </div>
+          <div class="screen-label">Step 1 — Generate IRAS Forms</div>
+          <div class="screen-desc">3-column form with submission config, employee selection table, and pagination. Users
+            select employees and configure form type before generating.</div>
+        </div>
+        <div class="screen-item">
+          <div class="screen-wrap">
+            <img src="images/iras2.png" alt="Step 2 — IRAS History & Submit" />
+          </div>
+          <div class="screen-label">Step 2 — Review & Submit</div>
+          <div class="screen-desc">Filterable history table showing batch status, success/fail counts, and per-row
+            actions. Users verify generated forms before submitting to IRAS.</div>
+        </div>
+        <div class="screen-item">
+          <div class="screen-wrap">
+            <img src="images/iras3.png" alt="Step 3 — Submission Status" />
+          </div>
+          <div class="screen-label">Step 3 — Submission Status</div>
+          <div class="screen-desc">Results dashboard with status indicators, warning descriptions, and two clear action
+            paths — resubmit with corrections or proceed despite warnings.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: OUTCOMES -->
+  <div class="section">
+    <div class="section-inner">
+      <div class="section-label">Outcomes</div>
+      <h2>A live feature used every tax season</h2>
+
+      <div class="outcomes-grid">
+        <div class="outcome-card">
+          <div class="outcome-icon">🔄</div>
+          <h4>Dual-system login eliminated</h4>
+          <p>HR admins no longer need to access JustLogin Classic for tax filing — the entire IRAS workflow now lives
+            natively in Express.</p>
+        </div>
+        <div class="outcome-card">
+          <div class="outcome-icon">🚀</div>
+          <h4>Live in production since 2022</h4>
+          <p>The feature shipped and has been actively used by JustLogin's enterprise HR clients every tax filing season
+            since launch.</p>
+        </div>
+        <div class="outcome-card">
+          <div class="outcome-icon">🎯</div>
+          <h4>Complex flow made simple</h4>
+          <p>A multi-step government compliance process was redesigned into a clear, guided 3-step wizard with
+            persistent progress tracking.</p>
+        </div>
+        <div class="outcome-card">
+          <div class="outcome-icon">🛡️</div>
+          <h4>Error handling built in</h4>
+          <p>Designed explicit warning and failure states so HR admins always know exactly what went wrong and what to
+            do next — reducing support tickets.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER CTA -->
+  <div class="footer-cta">
+    <div class="footer-cta-text">
+      <h3>Want to see more of my work?</h3>
+      <p>I'm currently open to remote UI/UX and product design opportunities.</p>
+    </div>
+    <a class="cta-btn" href="mailto:eggie.valenzuela@gmail.com">Get in touch →</a>
+  </div>
+
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lbClose">✕</button>
+    <img id="lbImg" src="" alt="" />
+  </div>
+
+  <script>
+    const lb = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lbImg');
+    const lbClose = document.getElementById('lbClose');
+
+    document.querySelectorAll('.screen-wrap img').forEach(img => {
+      img.addEventListener('click', () => {
+        lbImg.src = img.src;
+        lbImg.alt = img.alt;
+        lb.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    function closeLb() {
+      lb.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    lbClose.addEventListener('click', closeLb);
+    lb.addEventListener('click', e => { if (e.target === lb) closeLb(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
+  </script>
+
+</body>
+
+</html>
