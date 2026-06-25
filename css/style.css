@@ -905,6 +905,10 @@
                 gap: 0.5rem;
             }
 
+               .hero {
+                      justify-content: normal;
+               }
+
             .hero-stats {
                 flex-direction: row;
                 align-items: flex-start;
